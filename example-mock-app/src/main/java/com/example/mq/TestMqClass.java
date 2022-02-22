@@ -22,7 +22,7 @@ public class TestMqClass {
 
     }
 
-    @MqListener(mqType = MqType.ACTIVE_MQ, queueName = "test-queue")
+    @MqListener(brokerUrl = "tcp://127.0.0.1:61616", mqType = MqType.ACTIVE_MQ, queueName = "test-queue")
     public void testMessage(@MessagePayload String message, @Ack Acknowledgement ack) {
         System.out.println(System.currentTimeMillis() + "     " + "From testMessage() " + message);
     }
