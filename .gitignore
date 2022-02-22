@@ -1,0 +1,3 @@
+# Project exclude paths
+/example-mock-app/target/
+/spring-boot-generic-mq-auto-connector/target/
