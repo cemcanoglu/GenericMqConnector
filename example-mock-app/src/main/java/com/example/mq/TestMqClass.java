@@ -17,22 +17,18 @@ import com.example.dto.ExampleSmsMessageDto;
 public class TestMqClass {
 
     @MqListener(brokerUrl = "tcp://127.0.0.1:61616", mqType = MqType.ACTIVE_MQ, queueName = "sms-message-queue", concurrentConsumerNum = 4)
-    public void onMessageCome(@MessagePayload ExampleSmsMessageDto message, @Ack String ack) {
+    public void onMessageCome(@MessagePayload ExampleSmsMessageDto message) {
         System.out.println(System.currentTimeMillis() + "     " + message.getMessageContent());
-
     }
 
     @MqListener(brokerUrl = "tcp://127.0.0.1:61616", mqType = MqType.ACTIVE_MQ, queueName = "test-queue")
     public void testMessage(@MessagePayload String message, @Ack Acknowledgement ack) {
         System.out.println(System.currentTimeMillis() + "     " + "From testMessage() " + message);
+        ack.doAck();
     }
 
     @MqListener(brokerUrl = "amqp://admin:admin@localhost:5672", mqType = MqType.RABBIT_MQ, queueName = "rabbit-test-queue", concurrentConsumerNum = 3)
     public void testRabbitMq(@MessagePayload ExampleSmsMessageDto message) {
         System.out.println(System.currentTimeMillis() + "     " + "From testRabbitMq() " + message.getMessageContent());
-
-
     }
-
-
 }
