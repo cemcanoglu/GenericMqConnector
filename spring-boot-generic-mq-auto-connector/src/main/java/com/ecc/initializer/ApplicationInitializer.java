@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.util.ObjectUtils;
@@ -57,25 +58,18 @@ class ApplicationInitializer implements ApplicationListener<ContextRefreshedEven
                 logger.error("brokerUrl not found to connect " + queueName);
                 return;
             }
-            BeanObject beanObject = generateBean(method);
+            BeanObject beanObject = generateBean(method, event);
             int concurrentConsumerNum = declaredAnnotation.concurrentConsumerNum();
             MqMessageListener listener = listenerFactory.createListener(mqType);
             listener.listen(brokerUrl, concurrentConsumerNum, queueName, beanObject);
         });
     }
 
-    private BeanObject generateBean(Method method) {
+    private BeanObject generateBean(Method method, ContextRefreshedEvent event ) {
         Class<?> declaringClass = method.getDeclaringClass();
-        try {
-            //TODO bean instance should be created as singleton
-            Object beanInstance = declaringClass.getDeclaredConstructor().newInstance();
-            return new BeanObject(beanInstance, method);
-
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            //TODO should be implemented
-            e.printStackTrace();
-        }
-        return null;
+        ApplicationContext applicationContext = event.getApplicationContext();
+        Object beanInstance = applicationContext.getBean(declaringClass);
+        return new BeanObject(beanInstance, method);
     }
 }
 

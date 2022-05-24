@@ -6,14 +6,16 @@ import com.ecc.annotation.Ack;
 import com.ecc.annotation.MessagePayload;
 import com.ecc.annotation.MqListener;
 import com.example.dto.ExampleSmsMessageDto;
+import org.springframework.stereotype.Component;
 
-
+//
 //{
 //        "toAddress":"05548368737",
 //        "fromAddress":"05354997213",
 //        "messageContent":"testMessage....."
 //}
 
+@Component
 public class TestMqClass {
 
     @MqListener(brokerUrl = "tcp://127.0.0.1:61616", mqType = MqType.ACTIVE_MQ, queueName = "sms-message-queue", concurrentConsumerNum = 4)

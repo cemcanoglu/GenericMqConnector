@@ -34,6 +34,7 @@ docker run -p 61616:61616 -p 8161:8161 rmohr/activemq
 }
 ```
 ```java
+@Component
 public class TestMqClass {
     
     @MqListener(brokerUrl = "tcp://127.0.0.1:61616", mqType = MqType.ACTIVE_MQ, queueName = "sms-message-queue", concurrentConsumerNum = 4)
@@ -44,7 +45,7 @@ public class TestMqClass {
 ```
 ```java
 // NOTE : in this example brokerUrl comes from application property file or environment variables.
-
+@Component
 public class TestMqClassManualAck {
 
     @MqListener(mqType = MqType.ACTIVE_MQ, queueName = "test-queue")
